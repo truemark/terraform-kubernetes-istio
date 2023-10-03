@@ -21,7 +21,7 @@ resource "helm_release" "istio-discovery" {
 }
 
 resource "helm_release" "istio-gateway-external" {
-  count = var.istio_enable_external_gateway ? 1 : 0
+  count            = var.istio_enable_external_gateway ? 1 : 0
   name             = "istio-gateway-external"
   repository       = "https://istio-release.storage.googleapis.com/charts"
   chart            = "gateway"
@@ -35,7 +35,7 @@ resource "helm_release" "istio-gateway-external" {
 }
 
 resource "helm_release" "istio-gateway-internal" {
-  count = var.istio_enable_internal_gateway ? 1 : 0
+  count            = var.istio_enable_internal_gateway ? 1 : 0
   name             = "istio-gateway-internal"
   repository       = "https://istio-release.storage.googleapis.com/charts"
   chart            = "gateway"
