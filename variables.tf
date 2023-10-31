@@ -1,3 +1,31 @@
+variable "vpc_id" {
+  type        = string
+  description = "The ID of the VPC."
+}
+
+variable "istio_external_gateway_lb_certs" {
+  type        = string
+  description = "The certificates for the Istio external gateway load balancer."
+}
+
+variable "istio_external_gateway_service_kind" {
+  type        = string
+  default     = "NodePort"
+  description = "The type of service for the Istio external gateway."
+}
+
+variable "istio_external_gateway_scaling_max_replicas" {
+  type        = number
+  description = "The maximum number of replicas for scaling the Istio external gateway."
+  default     = 5
+}
+
+variable "istio_external_gateway_scaling_target_cpu_utilization" {
+  type        = number
+  description = "The target CPU utilization percentage for scaling the external gateway."
+  default     = 80
+}
+
 variable "istio_release_version" {
   type        = string
   default     = "1.18.3"
