@@ -29,7 +29,7 @@ variable "istio_enable_internal_gateway" {
 
 ## External Gateway configs
 variable "istio_external_gateway_lb_certs" {
-  type        = string
+  type        = list(string)
   description = "The certificates for the Istio external gateway load balancer."
 }
 
