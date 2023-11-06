@@ -1,4 +1,4 @@
-data "aws_subnets" "istio_private" {
+data "aws_subnets" "istio_private_subnet_ids" {
   filter {
     name   = "vpc-id"
     values = [var.vpc_id]
@@ -8,7 +8,7 @@ data "aws_subnets" "istio_private" {
   }
 }
 
-data "aws_subnets" "istio_public" {
+data "aws_subnets" "istio_public_subnet_ids" {
   filter {
     name   = "vpc-id"
     values = [var.vpc_id]
@@ -35,7 +35,7 @@ resource "helm_release" "istio-discovery" {
   namespace        = var.istio_release_namespace
   create_namespace = true
   values           = [
-    templatefile("${path.module}/values/values-istiod.yaml", {})
+    templatefile("${path.module}/values/istiod.yaml", {})
   ]
   depends_on = [helm_release.istio-base]
 }
@@ -49,10 +49,10 @@ resource "helm_release" "istio-gateway-external" {
   namespace        = "istio-system"
   create_namespace = true
   values           = [
-    templatefile("${path.module}/values/values-external-gateway.yaml", {
+    templatefile("${path.module}/values/external-gateway.yaml", {
       external_gateway_service_kind                   = var.istio_external_gateway_service_kind
-      external_gateway_lb_subnets                     = join(",", data.aws_subnets.istio_public.ids)
-      external_gateway_lb_certs                       = var.istio_external_gateway_lb_certs
+      external_gateway_lb_subnets                     = join(",", data.aws_subnets.istio_public_subnet_ids.ids)
+      external_gateway_lb_certs                       = join(",", var.istio_external_gateway_lb_certs)
       external_gateway_scaling_max_replicas           = var.istio_external_gateway_scaling_max_replicas
       external_gateway_scaling_target_cpu_utilization = var.istio_external_gateway_scaling_target_cpu_utilization
     })
@@ -69,7 +69,13 @@ resource "helm_release" "istio-gateway-internal" {
   namespace        = "istio-system"
   create_namespace = true
   values           = [
-    templatefile("${path.module}/values/values-internal-gateway.yaml", {})
+    templatefile("${path.module}/values/internal-gateway.yaml", {
+      internal_gateway_service_kind                   = var.istio_internal_gateway_service_kind
+      internal_gateway_lb_subnets                     = join(",", data.aws_subnets.istio_private_subnet_ids.ids)
+      internal_gateway_lb_certs                       = join(",", var.istio_internal_gateway_lb_certs)
+      internal_gateway_scaling_max_replicas           = var.istio_internal_gateway_scaling_max_replicas
+      internal_gateway_scaling_target_cpu_utilization = var.istio_internal_gateway_scaling_target_cpu_utilization
+    })
   ]
   depends_on = [helm_release.istio-base, helm_release.istio-discovery]
 }

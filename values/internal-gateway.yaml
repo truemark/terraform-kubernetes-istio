@@ -18,7 +18,7 @@ serviceAccount:
   # If set, a service account will be created. Otherwise, the default is used
   create: true
   # Annotations to add to the service account
-  annotations: { }
+  annotations: {}
   # The name of the service account to use.
   # If not set, the release name is used
   name: ""
@@ -38,7 +38,7 @@ containerSecurityContext: ~
 
 service:
   # Type of service. Set to "None" to disable the service entirely
-  type: NodePort
+  type: ${internal_gateway_service_kind}
   ports:
     - name: status-port
       port: 15021
@@ -52,11 +52,22 @@ service:
       port: 443
       protocol: TCP
       targetPort: 443
-  annotations: { }
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-name: "istio-internal-gateway"
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb-ip"
+    service.beta.kubernetes.io/aws-load-balancer-subnets: ${internal_gateway_lb_subnets}
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internal"
+    service.beta.kubernetes.io/aws-load-balancer-target-group-attributes: preserve_client_ip.enabled=true
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: ${internal_gateway_lb_certs}
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "https"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-negotiation-policy: "ELBSecurityPolicy-TLS13-1-2-Res-2021-06"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-protocol: "HTTP"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "15021"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-path: "/healthz/ready"
   loadBalancerIP: ""
-  loadBalancerSourceRanges: [ ]
+  loadBalancerSourceRanges: []
   externalTrafficPolicy: ""
-  externalIPs: [ ]
+  externalIPs: []
 
 resources:
   requests:
@@ -73,21 +84,21 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
 
 # Pod environment variables
-env: { }
+env: {}
 
 # Labels to apply to all resources
-labels: { }
+labels: {}
 
 # Annotations to apply to all resources
-annotations: { }
+annotations: {}
 
-nodeSelector: { }
+nodeSelector: {}
 
-tolerations: [ ]
+tolerations: []
 
-topologySpreadConstraints: [ ]
+topologySpreadConstraints: []
 
-affinity: { }
+affinity: {}
 
 # If specified, the gateway will act as a network gateway for the given network.
 networkGateway: ""
@@ -96,7 +107,7 @@ networkGateway: ""
 # Default behavior: latest images will be Always else IfNotPresent
 imagePullPolicy: ""
 
-imagePullSecrets: [ ]
+imagePullSecrets: []
 
 # This value is used to configure a Kubernetes PodDisruptionBudget for the gateway.
 #
@@ -126,7 +137,7 @@ imagePullSecrets: [ ]
 #
 # podDisruptionBudget: {}
 #
-podDisruptionBudget: { }
+podDisruptionBudget: {}
 
 #terminationGracePeriodSeconds: 30
 
