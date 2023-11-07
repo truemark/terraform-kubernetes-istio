@@ -37,6 +37,9 @@ variable "istio_external_gateway_service_kind" {
   type        = string
   default     = "NodePort"
   description = "The type of service for the Istio external gateway."
+  validation {
+    condition = contains(["NodePort", "LoadBalancer", "ClusterIP"], var.istio_external_gateway_service_kind)
+  }
 }
 
 variable "istio_external_gateway_scaling_max_replicas" {
@@ -61,6 +64,9 @@ variable "istio_internal_gateway_service_kind" {
   type        = string
   default     = "NodePort"
   description = "The type of service for the Istio internal gateway."
+  validation {
+    condition = contains(["NodePort", "LoadBalancer", "ClusterIP"], var.istio_internal_gateway_service_kind)
+  }
 }
 
 variable "istio_internal_gateway_scaling_max_replicas" {
