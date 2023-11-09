@@ -39,6 +39,7 @@ variable "istio_external_gateway_service_kind" {
   description = "The type of service for the Istio external gateway."
   validation {
     condition = contains(["NodePort", "LoadBalancer", "ClusterIP"], var.istio_external_gateway_service_kind)
+    error_message = "istio_external_gateway_service_kind must be one of 'NodePort', 'LoadBalancer', or 'ClusterIP'."
   }
 }
 
@@ -66,6 +67,7 @@ variable "istio_internal_gateway_service_kind" {
   description = "The type of service for the Istio internal gateway."
   validation {
     condition = contains(["NodePort", "LoadBalancer", "ClusterIP"], var.istio_internal_gateway_service_kind)
+    error_message = "istio_internal_gateway_service_kind must be one of 'NodePort', 'LoadBalancer', or 'ClusterIP'."
   }
 }
 
