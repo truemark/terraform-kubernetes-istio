@@ -31,6 +31,7 @@ variable "istio_enable_internal_gateway" {
 variable "istio_external_gateway_lb_certs" {
   type        = list(string)
   description = "The certificates for the Istio external gateway load balancer."
+  default     = []
 }
 
 variable "istio_external_gateway_service_kind" {
@@ -38,8 +39,8 @@ variable "istio_external_gateway_service_kind" {
   default     = "NodePort"
   description = "The type of service for the Istio external gateway."
   validation {
-    condition = contains(["NodePort", "LoadBalancer", "ClusterIP"], var.istio_external_gateway_service_kind)
-    error_message = "istio_external_gateway_service_kind must be one of 'NodePort', 'LoadBalancer', or 'ClusterIP'."
+    condition     = contains(["NodePort", "LoadBalancer", "ClusterIP"], var.istio_external_gateway_service_kind)
+    error_message = "istio_external_gateway_service_kind must be one of NodePort, LoadBalancer, or ClusterIP."
   }
 }
 
@@ -59,6 +60,7 @@ variable "istio_external_gateway_scaling_target_cpu_utilization" {
 variable "istio_internal_gateway_lb_certs" {
   type        = list(string)
   description = "The certificates for the Istio internal gateway load balancer."
+  default     = []
 }
 
 variable "istio_internal_gateway_service_kind" {
@@ -66,8 +68,8 @@ variable "istio_internal_gateway_service_kind" {
   default     = "NodePort"
   description = "The type of service for the Istio internal gateway."
   validation {
-    condition = contains(["NodePort", "LoadBalancer", "ClusterIP"], var.istio_internal_gateway_service_kind)
-    error_message = "istio_internal_gateway_service_kind must be one of 'NodePort', 'LoadBalancer', or 'ClusterIP'."
+    condition     = contains(["NodePort", "LoadBalancer", "ClusterIP"], var.istio_internal_gateway_service_kind)
+    error_message = "istio_internal_gateway_service_kind must be one of NodePort, LoadBalancer, or ClusterIP."
   }
 }
 
