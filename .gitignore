@@ -37,3 +37,6 @@ terraform.rc
 
 *-local.yml
 test.yml
+
+# Ignore IDEA
+.idea/
