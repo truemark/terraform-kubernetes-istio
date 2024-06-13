@@ -23,7 +23,7 @@ data "aws_ec2_managed_prefix_list" "this" {
   name     = each.value
 }
 
-resource "helm_release" "istio-base" {
+resource "helm_release" "istio_base" {
   name             = "istio-base"
   repository       = "https://istio-release.storage.googleapis.com/charts"
   chart            = "base"
@@ -36,7 +36,7 @@ resource "helm_release" "istio-base" {
   }
 }
 
-resource "helm_release" "istio-discovery" {
+resource "helm_release" "istio_discovery" {
   name             = "istio-discovery"
   repository       = "https://istio-release.storage.googleapis.com/charts"
   chart            = "istiod"
@@ -51,7 +51,7 @@ resource "helm_release" "istio-discovery" {
       istio_cluster_name  = var.istio_cluster_name
     })
   ]
-  depends_on = [helm_release.istio-base]
+  depends_on = [helm_release.istio_base]
 }
 
 
@@ -60,7 +60,7 @@ resource "kubectl_manifest" "envoy_filters" {
   yaml_body = file(each.value)
 }
 
-resource "helm_release" "istio-gateway-external" {
+resource "helm_release" "istio_gateway_external" {
   count            = var.istio_enable_external_gateway ? 1 : 0
   name             = "istio-gateway-external"
   repository       = "https://istio-release.storage.googleapis.com/charts"
@@ -83,10 +83,10 @@ resource "helm_release" "istio-gateway-external" {
       lb_security_group_prefix_lists                  = join(",", values(data.aws_ec2_managed_prefix_list.this).*.id)
     })
   ]
-  depends_on = [helm_release.istio-base, helm_release.istio-discovery]
+  depends_on = [helm_release.istio_base, helm_release.istio_discovery]
 }
 
-resource "helm_release" "istio-gateway-internal" {
+resource "helm_release" "istio_gateway_internal" {
   count            = var.istio_enable_internal_gateway ? 1 : 0
   name             = "istio-gateway-internal"
   repository       = "https://istio-release.storage.googleapis.com/charts"
@@ -109,5 +109,5 @@ resource "helm_release" "istio-gateway-internal" {
       lb_security_group_prefix_lists                  = join(",", values(data.aws_ec2_managed_prefix_list.this).*.id)
     })
   ]
-  depends_on = [helm_release.istio-base, helm_release.istio-discovery]
+  depends_on = [helm_release.istio_base, helm_release.istio_discovery]
 }
