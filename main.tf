@@ -44,7 +44,12 @@ resource "helm_release" "istio-discovery" {
   namespace        = var.istio_release_namespace
   create_namespace = true
   values = [
-    templatefile("${path.module}/values/istiod.yaml", {})
+    templatefile("${path.module}/values/istiod.tftpl", {
+      istio_mesh_id       = var.istio_mesh_id
+      istio_network       = var.istio_network
+      istio_multi_cluster = var.istio_multi_cluster
+      istio_cluster_name  = var.istio_cluster_name
+    })
   ]
   depends_on = [helm_release.istio-base]
 }

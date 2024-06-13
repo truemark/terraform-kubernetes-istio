@@ -41,6 +41,33 @@ variable "aws_managed_prefix_lists" {
   }
 }
 
+variable "istio_mesh_id" {
+  type        = string
+  description = "The ID of the Istio mesh."
+  default     = null
+  nullable    = true
+}
+
+variable "istio_network" {
+  type        = string
+  description = "The network for the Istio mesh."
+  default     = null
+  nullable    = true
+}
+
+variable "istio_multi_cluster" {
+  type        = bool
+  description = "Enable multi-cluster support for Istio."
+  default     = false
+}
+
+variable "istio_cluster_name" {
+  type        = string
+  description = "The name of the cluster."
+  default     = null
+  nullable    = true
+}
+
 ## External Gateway configs
 variable "istio_external_gateway_lb_certs" {
   type        = list(string)

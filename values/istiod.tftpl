@@ -1,3 +1,17 @@
+%{~ if istio_mesh_id != null || istio_network != null || istio_multi_cluster ~}
+global:
+  %{~ if istio_mesh_id != null ~}
+  meshID: ${istio_mesh_id}
+  %{~ endif ~}
+  %{~ if istio_network != null ~}
+  network: ${istio_network}
+  %{~ endif ~}
+  %{~ if istio_multi_cluster ~}
+  multiCluster:
+    clusterName: ${istio_cluster_name}
+    enabled: ${istio_multi_cluster}
+  %{~ endif ~}
+%{~ endif ~}
 meshConfig:
   defaultConfig:
     holdApplicationUntilProxyStarts: true
