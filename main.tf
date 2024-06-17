@@ -34,8 +34,13 @@ resource "helm_release" "istio-discovery" {
   version          = var.istio_release_version
   namespace        = var.istio_release_namespace
   create_namespace = true
-  values           = [
-    templatefile("${path.module}/values/istiod.yaml", {})
+  values = [
+    templatefile("${path.module}/values/istiod.yaml", {
+      mesh_id       = var.istio_mesh_id
+      network       = var.istio_network
+      multi_cluster = var.istio_multi_cluster
+      cluster_name  = var.istio_cluster_name
+    })
   ]
   depends_on = [helm_release.istio-base]
 }
@@ -48,7 +53,7 @@ resource "helm_release" "istio-gateway-external" {
   version          = var.istio_release_version
   namespace        = "istio-system"
   create_namespace = true
-  values           = [
+  values = [
     templatefile("${path.module}/values/external-gateway.yaml", {
       external_gateway_service_kind                   = var.istio_external_gateway_service_kind
       external_gateway_lb_subnets                     = join(",", data.aws_subnets.istio_public_subnet_ids.ids)
@@ -68,7 +73,7 @@ resource "helm_release" "istio-gateway-internal" {
   version          = var.istio_release_version
   namespace        = "istio-system"
   create_namespace = true
-  values           = [
+  values = [
     templatefile("${path.module}/values/internal-gateway.yaml", {
       internal_gateway_service_kind                   = var.istio_internal_gateway_service_kind
       internal_gateway_lb_subnets                     = join(",", data.aws_subnets.istio_private_subnet_ids.ids)

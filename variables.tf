@@ -15,6 +15,33 @@ variable "istio_release_namespace" {
   description = "The Kubernetes namespace where Istio will be installed."
 }
 
+variable "istio_mesh_id" {
+  type        = string
+  description = "The ID of the Istio mesh."
+  default     = ""
+  nullable    = true
+}
+
+variable "istio_network" {
+  type        = string
+  description = "The network for the Istio mesh."
+  default     = ""
+  nullable    = true
+}
+
+variable "istio_multi_cluster" {
+  type        = bool
+  description = "Enable multi-cluster support for Istio."
+  default     = false
+}
+
+variable "istio_cluster_name" {
+  type        = string
+  description = "The name of the cluster."
+  default     = ""
+  nullable    = true
+}
+
 variable "istio_enable_external_gateway" {
   type        = bool
   default     = true

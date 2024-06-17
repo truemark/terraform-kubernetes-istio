@@ -437,7 +437,7 @@ global:
   # If the mesh admin does not specify a value, Istio will use the value of the
   # mesh's Trust Domain. The best practice is to select a proper Trust Domain
   # value.
-  meshID: ""
+  meshID: "${mesh_id}"
 
   # Configure the mesh networks to be used by the Split Horizon EDS.
   #
@@ -476,14 +476,14 @@ global:
     # ingressgateway services when pods in each cluster cannot directly
     # talk to one another. All clusters should be using Istio mTLS and must
     # have a shared root CA for this model to work.
-    enabled: false
+    enabled: ${multi_cluster}
     # Should be set to the name of the cluster this installation will run in. This is required for sidecar injection
     # to properly label proxies
-    clusterName: ""
+    clusterName: "${cluster_name}"
 
   # Network defines the network this cluster belong to. This name
   # corresponds to the networks in the map of mesh networks.
-  network: ""
+  network: "${network}"
 
   # Configure the certificate provider for control plane communication.
   # Currently, two providers are supported: "kubernetes" and "istiod".
