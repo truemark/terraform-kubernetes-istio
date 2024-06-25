@@ -12,6 +12,7 @@ service:
       port: 443
       protocol: TCP
       targetPort: 443
+  %{~ if external_gateway_service_kind == "LoadBalancer" ~}
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-name: "istio-external-gateway"
     service.beta.kubernetes.io/aws-load-balancer-type: "external"
@@ -32,6 +33,7 @@ service:
     %{~ if external_gateway_lb_source_ranges != "" ~}
     service.beta.kubernetes.io/load-balancer-source-ranges: ${external_gateway_lb_source_ranges}
     %{~ endif ~}
+  %{~ endif ~}
 autoscaling:
   enabled: true
   minReplicas: 1
